@@ -1,8 +1,13 @@
-describe('sf_invest_proc', () => {
-  it.only('bank_transfer', () => {
-    cy.safeVisit('https://www.test.smartfunding.co.il/')
-    cy.get('div.nav > .nav > :nth-child(2) > .nav-link')
-      .click()
+describe('Investment Process Tests', () => {
+
+  // Test 1: Bank transfer investment flow
+  it('should complete investment process via bank transfer', () => {
+    cy.safeVisit(Cypress.env('BASE_URL'))
+
+    // Navigate to investments page
+    cy.get('div.nav > .nav > :nth-child(2) > .nav-link').click()
+
+    // Select project
     cy.get("#__layout > div > div.page-content > div > div:nth-child(3) > div > div > div > div:nth-child(9) > div")
       .scrollIntoView()
       .realHover()
@@ -12,124 +17,36 @@ describe('sf_invest_proc', () => {
     cy.get("#__layout > div > div.page-content > div > div:nth-child(3) > div > div > div > div:nth-child(9) > div > div.tile__curtain > div.tile__curtain-btns > a.btn.btn__gold")
       .click()
 
-    //invest
+    // Start investment
     cy.get("#__layout > div > div.page-content > div > div.container-fluid > div > div > div:nth-child(2) > div.project-tiles__box-item.is-two-thirds > div > div > div.how-many-shares__footer > div > div > button")
       .scrollIntoView()
       .click()
-    cy.get("#certifyInvestment")
-      .click()
+    cy.get("#certifyInvestment").click()
     cy.get("#choose-amount > div > div.modal-body > div > div > div > div:nth-child(1) > div:nth-child(5) > div.col-12.col-sm-8 > div > div > button")
       .click()
 
-    //login
-    cy.get('.modal-header', { timeout: 10000 })
-      .should('be.visible')
-    cy.get('.modal-body', { timeout: 10000 })
-      .should('be.visible')
-    cy.get('.login-form > [name="email"]')
-      .type("army7makarova@gmail.com")
-    cy.get('[name="password"]')
-      .type("Qwerty123")
-    cy.get('.modal-form-login-button')
-      .click()
+    // Login
+    cy.get('.modal-header', { timeout: 10000 }).should('be.visible')
+    cy.get('.modal-body', { timeout: 10000 }).should('be.visible')
+    cy.get('.login-form > [name="email"]').type('investor@example.com')
+    cy.get('[name="password"]').type('Password123')
+    cy.get('.modal-form-login-button').click()
 
-    //cont invest
-    cy.contains(/Investment process|תהליך השקעה/)
-    cy.get('div.top-block.mr-3.ml-3.rtl')
-      .should('be.visible')
-    cy.get('button.registration-btn-btn-dark.next.to-invest-step2')
-      .click()
-    cy.get('label.color-black')
-      .click()
-    cy.get('button.registration-btn-btn-dark.next.to-invest-step3')
-      .click()
+    // Continue investment flow
+    cy.contains(/Investment process/)
+    cy.get('div.top-block.mr-3.ml-3.rtl').should('be.visible')
+    cy.get('button.registration-btn-btn-dark.next.to-invest-step2').click()
+    cy.get('label.color-black').click()
+    cy.get('button.registration-btn-btn-dark.next.to-invest-step3').click()
     cy.wait(1000)
-    cy.get("#payByBank")
-      .click()
+
+    // Select bank transfer payment
+    cy.get("#payByBank").click()
     cy.get('#__layout > div > div.page-content > div > div:nth-child(3) > div > div > div > div > div > div.invest-details__content.row.pt-10 > div > div > div > div > div.mt-xs-20 > button')
       .click()
-    cy.url({ timeout: 50000 })
-      .should('eq', 'https://www.test.smartfunding.co.il/')
+
+    // Verify redirect to home page after successful investment
+    cy.url({ timeout: 50000 }).should('eq', Cypress.env('BASE_URL'))
   })
 
-
-  //   it('credit_card', () => {
-  //     cy.safeVisit('https://www.test.smartfunding.co.il/')
-  //     cy.get('div.nav > .nav > :nth-child(2) > .nav-link').click()
-  //     cy.get('li:nth-child(2) a.page-link')
-  //       .scrollIntoView()
-  //       .click()
-  //     cy.get('#__layout > div > div.page-content > div > div:nth-child(3) > div > div > div > div:nth-child(1)')
-  //       .scrollIntoView()
-  //       .realHover()
-  //       .wait(1000)
-  //     cy.get('#__layout > div > div.page-content > div > div:nth-child(3) > div > div > div > div:nth-child(1) > div > div.tile__curtain')
-  //       .should('be.visible')
-  //     cy.get('#__layout > div > div.page-content > div > div:nth-child(3) > div > div > div > div:nth-child(1) > div > div.tile__curtain > div.tile__curtain-btns > a.btn.btn__gold')
-  //       .click()
-
-  //     //start invest
-  //     cy.get('#__layout > div > div.page-content > div > div.container-fluid > div > div > div:nth-child(2) > div.project-tiles__box-item.is-two-thirds > div > div > div.how-many-shares__footer > div > div > button')
-  //       .scrollIntoView()
-  //       .click()
-  //     cy.get("#certifyInvestment")
-  //       .click()
-  //     cy.get("#choose-amount > div > div.modal-body > div > div > div > div:nth-child(1) > div:nth-child(5) > div.col-12.col-sm-8 > div > div > button")
-  //       .click()
-
-  //     //login
-  //     cy.get('.modal-header', { timeout: 10000 }).should('be.visible')
-  //     cy.get('.modal-body', { timeout: 10000 }).should('be.visible')
-  //     cy.get('.login-form > [name="email"]')
-  //       .type("army7makarova@gmail.com")
-  //     cy.get('[name="password"]')
-  //       .type("Qwerty123")
-  //     cy.get('.modal-form-login-button').click()
-
-  //     //cont invest
-  //     cy.contains(/Investment process|תהליך השקעה/, { timeout: 20000 })
-  //     cy.get('div.top-block.mr-3.ml-3.rtl', { timeout: 20000 })
-  //       .should('be.visible')
-  //     cy.get('button.registration-btn-btn-dark.next.to-invest-step2')
-  //       .click()
-  //     cy.get('label.color-black')
-  //       .click()
-  //     cy.get('button.registration-btn-btn-dark.next.to-invest-step3')
-  //       .click()
-  //     cy.wait(1000)
-  //     cy.get('#payByCard')
-  //       .click()
-
-  //     // cy.get('iframe#frame', { timeout: 30000 })
-  //     //   .invoke('attr', 'src')
-  //     //   .then((src) => {
-  //     //     const { origin } = new URL(src)
-
-  //     //     cy.origin(origin, { args: { src } }, ({ src }) => {
-  //     //       cy.visit(src)
-  //     //       cy.location('origin').should('eq', new URL(src).origin)
-  //     //       cy.get('#cardNum', { timeout: 15000 })
-  //     //         .should('be.visible')
-  //     //         .type('4580000000000001')
-  //     //       cy.get('#ddlYear')
-  //     //         .should('be.visible')
-  //     //         .select('2027')
-  //     //       cy.get('#ddlMonth')
-  //     //         .should('be.visible')
-  //     //         .select('03');
-  //     //       cy.get('#cvv2')
-  //     //         .should('be.visible')
-  //     //         .type('111')
-  //     //       cy.get('#id')
-  //     //         .should('be.visible')
-  //     //         .type('123456790')
-  //     //       cy.get('#cardsubmitbtn')
-  //     //         .should('be.enabled')
-  //     //         .click();
-  //     //     })
-  //     //   })
-  //     cy.get('div.fz-17', { timeout: 20000 })
-  //       .should('be.visible')
-  //       .and('contain.text', 'כרטסי אשראי')
-  //   })
 })
